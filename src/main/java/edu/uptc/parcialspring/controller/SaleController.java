@@ -22,30 +22,46 @@ public class SaleController {
 
     @GetMapping
     public ResponseEntity<Object> getAllSales() {
-        List<Sale> sales = saleService.getAllSales();
-        return ResponseHandler.generateResponse("Sales retrieved successfully", HttpStatus.OK, sales);
+        try {
+            List<Sale> result = saleService.getAllSales();
+            return ResponseHandler.generateResponse("Sales retrieved successfully", HttpStatus.OK, result);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getSaleById(@PathVariable Long id) {
-        Optional<Sale> sale = saleService.getSaleById(id);
-        return sale.map(value -> ResponseHandler.generateResponse("Sale found", HttpStatus.OK, value))
-                .orElseGet(() -> ResponseHandler.generateResponse("Sale not found", HttpStatus.NOT_FOUND, null));
+        try {
+            Optional<Sale> result = saleService.getSaleById(id);
+            return result.map(value -> ResponseHandler.generateResponse("Sale found", HttpStatus.OK, value))
+                    .orElseGet(() -> ResponseHandler.generateResponse("Sale not found", HttpStatus.NOT_FOUND, null));
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @PostMapping
     public ResponseEntity<Object> saveSale(@RequestBody Sale sale) {
-        Sale savedSale = saleService.saveSale(sale);
-        return ResponseHandler.generateResponse("Sale created successfully", HttpStatus.CREATED, savedSale);
+        try {
+            Sale result = saleService.saveSale(sale);
+            return ResponseHandler.generateResponse("Sale created successfully", HttpStatus.CREATED, result);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSale(@PathVariable Long id) {
-        boolean deleted = saleService.deleteSale(id);
-        if (deleted) {
-            return ResponseHandler.generateResponse("Sale deleted successfully", HttpStatus.NO_CONTENT, null);
-        } else {
-            return ResponseHandler.generateResponse("Sale not found", HttpStatus.NOT_FOUND, null);
+        try {
+            boolean deleted = saleService.deleteSale(id);
+            if (deleted) {
+                return ResponseHandler.generateResponse("Sale deleted successfully", HttpStatus.NO_CONTENT, null);
+            } else {
+                return ResponseHandler.generateResponse("Sale not found", HttpStatus.NOT_FOUND, null);
+            }
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 }

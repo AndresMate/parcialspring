@@ -22,37 +22,57 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Object> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        return ResponseHandler.generateResponse("Products retrieved successfully", HttpStatus.OK, products);
+        try {
+            List<Product> result = productService.getAllProducts();
+            return ResponseHandler.generateResponse("Products retrieved successfully", HttpStatus.OK, result);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(value -> ResponseHandler.generateResponse("Product found", HttpStatus.OK, value))
-                .orElseGet(() -> ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null));
+        try {
+            Optional<Product> result = productService.getProductById(id);
+            return result.map(value -> ResponseHandler.generateResponse("Product found", HttpStatus.OK, value))
+                    .orElseGet(() -> ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null));
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @PostMapping
     public ResponseEntity<Object> saveProduct(@RequestBody Product product) {
-        Product savedProduct = productService.saveProduct(product);
-        return ResponseHandler.generateResponse("Product created successfully", HttpStatus.CREATED, savedProduct);
+        try {
+            Product result = productService.saveProduct(product);
+            return ResponseHandler.generateResponse("Product created successfully", HttpStatus.CREATED, result);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Optional<Product> updatedProduct = productService.updateProduct(id, product);
-        return updatedProduct.map(value -> ResponseHandler.generateResponse("Product updated successfully", HttpStatus.OK, value))
-                .orElseGet(() -> ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null));
+        try {
+            Optional<Product> result = productService.updateProduct(id, product);
+            return result.map(value -> ResponseHandler.generateResponse("Product updated successfully", HttpStatus.OK, value))
+                    .orElseGet(() -> ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null));
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
-        boolean deleted = productService.deleteProduct(id);
-        if (deleted) {
-            return ResponseHandler.generateResponse("Product deleted successfully", HttpStatus.NO_CONTENT, null);
-        } else {
-            return ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null);
+        try {
+            boolean deleted = productService.deleteProduct(id);
+            if (deleted) {
+                return ResponseHandler.generateResponse("Product deleted successfully", HttpStatus.NO_CONTENT, null);
+            } else {
+                return ResponseHandler.generateResponse("Product not found", HttpStatus.NOT_FOUND, null);
+            }
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Error", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 }
