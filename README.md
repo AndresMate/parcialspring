@@ -6,5 +6,8 @@ Parcialspring es una aplicación desarrollada con Spring Boot que gestiona venta
 - Java 21
 - Maven 3.8+
 - PostgreSQL
+## Entidad Reacion
+![EntidadRlacion.png](EntidadRlacion.png)
+
 ## Presentado por
 - [Andres Felipe Mateus Riaño](https://github.com/AndresMate/parcialspring)
